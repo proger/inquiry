@@ -1,0 +1,55 @@
+.\"	$SYSREVERSE: inq.1,v 1.4 2011/05/25 20:27:43 proger Exp $
+.Dd $Mdocdate: May 25 2011 $
+.Dt inquiry 1
+.Os
+.Sh NAME
+.Nm inquiry
+.Nd parse the source tree into a model of components
+.Sh SYNOPSIS
+.Nm inquiry
+.Op Fl collection Ar mongo.collection.name
+.Op Fl d Ar debuglevel
+.Fl cc
+.Op compiler flags
+.Ar files
+.Sh DESCRIPTION
+The
+.Nm
+tool performs source tree processing by invoking the parsing routines
+from
+.Xr clang 1
+libraries. The preprocessor and AST data is used to build a component model
+of data structures, global data and data processing operations (functions).
+.\" The following requests should be uncommented and used where appropriate.
+.\" .Sh ENVIRONMENT
+.\" For sections 1, 6, 7 & 8 only.
+.\" .Sh FILES
+.\" .Sh EXIT STATUS
+.\" For sections 1, 6, & 8 only.
+.Sh EXAMPLES
+Processing the operating system kernel may require disabling default compiler
+search paths and builtins.
+.Pp
+.Bd -literal -offset indent
+  inquiry -collection sysreverse.openbsd                        \\
+          -cc -fno-builtin -ffreestanding -nostdinc             \\
+          -I/sys/arch/i386/compile/GENERIC -I/sys               \\
+          -D_KERNEL -I/sys/arch                                 \\
+          /sys/kern/*.c
+.Ed
+.Sh DIAGNOSTICS
+Send SIGUSR1 to increase debugging level and SIGUSR2 to decrease.
+.\" For sections 1, 4, 6, 7, and 8 only.
+.\" .Sh ERRORS
+.\" For sections 2, 3, and 9 error and signal handling only.
+.Sh SEE ALSO
+.Xr emerge 1
+.\" .Sh STANDARDS
+.Sh AUTHORS
+Vladimir Kirillov <proger@wilab.org.ua>
+.Sh CAVEATS
+Compiler errors are ignored.
+Running inquiry once per single file in a multi-file project
+may result in same identifiers appearing several times.
+Consider processing the whole tree in one invocation.
+.\" .Sh BUGS
